@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  node-teslo:
+    image: node-teslo
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: node-teslo
+    restart: always
+    ports: 
+      - "${PORT}:${PORT}"
+    working_dir: /var/www/node-teslo
+    volumes:
+      - ./:/var/www/node-teslo
