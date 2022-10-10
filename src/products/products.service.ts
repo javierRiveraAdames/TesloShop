@@ -13,7 +13,7 @@ export class ProductsService {
   private readonly logger = new Logger('Toma!! error')
   //patron respositorio en el service*************
   constructor(
-    @InjectRepository(Product)
+    @InjectRepository(Product, 'TesloDB')
     private readonly productRepository: Repository<Product>,
   ) { }
 

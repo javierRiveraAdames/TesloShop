@@ -22,11 +22,11 @@ describe('ProductsService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [ProductsService,
         {
-          provide: getRepositoryToken(Product, 'TesloDB'),
+           provide: getRepositoryToken(Product,'TesloDB'),
           useValue: mockProductRepository,
         }
       ],
-      imports: [ProductsModule],
+     // imports: [ProductsModule],
     }).compile();
 
     service = module.get<ProductsService>(ProductsService);

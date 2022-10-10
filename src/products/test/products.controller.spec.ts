@@ -12,12 +12,12 @@ describe('ProductsController', () => {
     update: jest.fn(),
     remove: jest.fn(),
   }
-  
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ProductsController],
       providers: [ProductsService],
-      imports: [ProductsModule]
+
     }).overrideProvider(ProductsService).useValue(mockProductService)
       .compile();
     controller = module.get<ProductsController>(ProductsController);
