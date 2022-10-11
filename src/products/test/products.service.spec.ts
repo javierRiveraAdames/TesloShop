@@ -3,6 +3,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { PaginationDto } from 'src/common/dtos/pagination.dtos';
 import { Repository } from 'typeorm';
 import { CreateProductDto } from '../dto/create-product.dto';
+import { UpdateProductDto } from '../dto/update-product.dto';
 import { Product } from '../entities/product.entity';
 import { ProductsController } from '../products.controller';
 import { ProductsModule } from '../products.module';
@@ -20,7 +21,7 @@ describe('ProductsService', () => {
     preload: jest.fn(),
     findOne: jest.fn(),
     remove: jest.fn(),
-    create:   jest.fn(),
+    create: jest.fn(),
   }
   const mockProductService: CreateProductDto = {
     title: 'pedro',
@@ -73,6 +74,7 @@ describe('ProductsService', () => {
 
     }
 
+
     it('should call findall Products', async () => {
       jest.spyOn(mockProductRepository, 'find')
         .mockResolvedValue({
@@ -99,19 +101,78 @@ describe('ProductsService', () => {
   })
   describe('create a new product', () => {
     it('should create a new product', async () => {
-      // jest.spyOn(mockProductRepository,'save').mockResolvedValue({
-      //   title: 'pedro',
-      //   price: 2,
-      //   description: 'lolia',
-      //   slug: 'pero',
-      //   stock: 3,
-      //   sizes: ['sm', 'md', 'xl'],
-      //   gender: 'men'
-      // })
+      //testea el metdo
 
-      // const result: any = await service.create(mockProductService)
-      // expect(result).toBeDefined()
+      jest.spyOn(mockProductRepository, 'create').mockResolvedValue({
+        title: 'pedro',
+        price: 2,
+        description: 'lolia',
+        slug: 'pero',
+        stock: 3,
+        sizes: ['sm', 'md', 'xl'],
+        gender: 'men'
+      })
+      jest.spyOn(mockProductRepository, 'save').mockResolvedValue({
+        title: 'pedro',
+        price: 2,
+        description: 'lolia',
+        slug: 'pero',
+        stock: 3,
+        sizes: ['sm', 'md', 'xl'],
+        gender: 'men'
+      })
+
+      // test de la funcion 
+      const result: any = await service.create(mockProductService)
+      expect(result).toBeDefined()
 
     })
   })
+
+
+  describe('update a product', () => {
+    const id: string = "6d161f2d-0214-456e-b1c2-bb0c4726a5bf"
+    const mockUpdate: UpdateProductDto = {
+
+      title: 'pedro',
+      price: 2,
+      description: 'lolia',
+      slug: 'pero',
+      stock: 3,
+      sizes: ['sm', 'md', 'xl'],
+      gender: 'men'
+    }
+    it('should update a product', async () => {
+      jest.spyOn(mockProductRepository, 'preload').mockResolvedValue({
+        id: "6d161f2d-0214-456e-b1c2-bb0c4726a5bf", ...mockUpdate
+      })
+      jest.spyOn(mockProductRepository, 'save').mockResolvedValue({
+        id: "6d161f2d-0214-456e-b1c2-bb0c4726a5bf", ...mockUpdate
+      })
+      const result: any = await service.update("6d161f2d-0214-456e-b1c2-bb0c4726a5bf", mockUpdate)
+      expect(result).toBeDefined()
+    })
+
+  })
+
+  describe('remove a product', () => {
+    it('should remove a product', async () => {
+      jest.spyOn(service,'findOne').mockResolvedValue( new Product)
+      jest.spyOn(mockProductRepository, 'remove').mockResolvedValue({
+        title: 'pedro',
+        price: 2,
+        description: 'lolia',
+        slug: 'pero',
+        stock: 3,
+        sizes: ['sm', 'md', 'xl'],
+        gender: 'men'
+      })
+      const result: any = await service.remove("jdkjdkjkdjk")
+      expect(result).toBeDefined()
+    })
+  })
+
+
+
+
 });

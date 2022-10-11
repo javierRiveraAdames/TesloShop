@@ -20,10 +20,11 @@ export class ProductsService {
   async create(createProductDto: CreateProductDto) {
     try {
       const product = await this.productRepository.create(createProductDto);
+
       await this.productRepository.save(product)
       return product
     } catch (error) {
-      console.log(error)
+     
       this.handleExceptionDB(error)
     }
 
@@ -41,29 +42,34 @@ export class ProductsService {
 
   async findOne(id: string) {
     let product: Product;
-
     if (IsUuId(id)) {
       product = await this.productRepository.findOneBy({ id: id })
     }
     else {
       const queryBuilder = this.productRepository.createQueryBuilder();
-      // product = await queryBuilder.andWhere('product.id = :id', { id }).getOne();
       product = await queryBuilder
         .andWhere('lower(title) =:title or lower(slug) =:slug', {
           title: id.toLocaleLowerCase(),
           slug: id.toLocaleLowerCase(),
         }).getOne();
     }
-    //product = await this.productRepository.findOneBy({ slug: id })
-
     if (!product) {
       throw new NotFoundException(` Product ${id} not found `)
     }
-
+console.log(product)
     return product
   }
 
+
+
+
+
+
+
+
+
   async update(id: string, updateProductDto: UpdateProductDto) {
+
     const product = await this.productRepository.preload({
       id: id,
       ...updateProductDto
@@ -71,21 +77,45 @@ export class ProductsService {
     try {
       if (!product) throw new NotFoundException(`Product whit id: ${id}`);
       await this.productRepository.save(product);
-      return product    
+      return product
     } catch (error) {
       this.handleExceptionDB(error);
     }
-  
+
   }
 
-  async remove(id: string) {
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  async remove(id: string) {
     const result = await this.findOne(id);
 
     await this.productRepository.remove(result)
-
+  
     return ` se elimino ${result}`
   }
+
+
+
+
+
 
   private handleExceptionDB(error: any) {
     this.logger.error(error)

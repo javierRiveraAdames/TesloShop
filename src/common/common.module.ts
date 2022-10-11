@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 @Module({
     imports: [ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
+        name: 'TesloDB',
         useFactory: () => ({
             type: 'postgres',
             host: process.env.DB_HOST,
