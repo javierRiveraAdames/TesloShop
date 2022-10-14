@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { PaginationDto } from 'src/common/dtos/pagination.dtos';
@@ -101,7 +102,7 @@ describe('ProductsService', () => {
   })
   describe('create a new product', () => {
     it('should create a new product', async () => {
-      //testea el metdo
+      //testea el metodo
 
       jest.spyOn(mockProductRepository, 'create').mockResolvedValue({
         title: 'pedro',
@@ -155,9 +156,12 @@ describe('ProductsService', () => {
 
   })
 
+
+
+
   describe('remove a product', () => {
     it('should remove a product', async () => {
-      jest.spyOn(service,'findOne').mockResolvedValue( new Product)
+      jest.spyOn(service, 'findOne').mockResolvedValue(new Product)
       jest.spyOn(mockProductRepository, 'remove').mockResolvedValue({
         title: 'pedro',
         price: 2,
@@ -171,6 +175,47 @@ describe('ProductsService', () => {
       expect(result).toBeDefined()
     })
   })
+
+  describe('find one product', () => {
+
+    it('should return a product', async () => {
+
+      jest.spyOn(mockProductRepository, 'findOneBy')
+      .mockResolvedValue("6d161f2d-0214-456e-b1c2-bb0c4726a5bf")
+      jest.spyOn(mockProductRepository, 'createQueryBuilder')
+      .mockResolvedValue({mockProductRepository: productRepository
+      })
+      const result: any = await service.findOne('6d161f2d-0214-456e-b1c2-bb0c4726a5bf')
+      expect(result).toBeDefined
+    })
+    it('should  trow notfoundexcep product',()=>{
+      jest.spyOn(mockProductRepository,'findOneBy').mockResolvedValue(null)
+    const result = service.findOne('6d161f2d-0214-456e-b1c2-bb0c4726a5bf')
+    expect(result).rejects.toThrowError(new NotFoundException(` Product ${'161f2d-0214-456e-b1c2-bb0c4726a5bf'} not found `))
+    })
+
+  })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

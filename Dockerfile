@@ -17,7 +17,7 @@ RUN npm run build
 # Production image, copy all the files and run next
 FROM node:18-alpine3.15 AS runner
 
-# Set working directory
+# Set working directory 
 WORKDIR /usr/src/app
 
 COPY package.json package-lock.json ./

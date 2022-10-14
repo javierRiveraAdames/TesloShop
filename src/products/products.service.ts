@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationDto } from 'src/common/dtos/pagination.dtos';
-import { Repository } from 'typeorm';
+import { QueryBuilder, Repository } from 'typeorm';
 import { validate as IsUuId } from 'uuid';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -24,7 +24,7 @@ export class ProductsService {
       await this.productRepository.save(product)
       return product
     } catch (error) {
-     
+
       this.handleExceptionDB(error)
     }
 
@@ -40,14 +40,21 @@ export class ProductsService {
     })
   }
 
+
+
+
+
+
   async findOne(id: string) {
     let product: Product;
     if (IsUuId(id)) {
       product = await this.productRepository.findOneBy({ id: id })
+      console.log(product)
     }
     else {
       const queryBuilder = this.productRepository.createQueryBuilder();
       product = await queryBuilder
+
         .andWhere('lower(title) =:title or lower(slug) =:slug', {
           title: id.toLocaleLowerCase(),
           slug: id.toLocaleLowerCase(),
@@ -56,12 +63,9 @@ export class ProductsService {
     if (!product) {
       throw new NotFoundException(` Product ${id} not found `)
     }
-console.log(product)
+
     return product
   }
-
-
-
 
 
 
@@ -108,7 +112,7 @@ console.log(product)
     const result = await this.findOne(id);
 
     await this.productRepository.remove(result)
-  
+
     return ` se elimino ${result}`
   }
 
