@@ -22,7 +22,7 @@ export class Product {
 
     @Column({ type: 'numeric' })
     stock: number
-
+///
     @Column('text', {
         array: true
     })
